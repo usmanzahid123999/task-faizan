@@ -53,26 +53,12 @@ long get_variable_value(pid_t child_pid, long address) {
     return ptrace(PTRACE_PEEKDATA, child_pid, (void *)address, NULL);
 }
 
-void print_variable_at_address(long address) {
-    // Print the value of variable at the specified address
-    printf("Value at address 0x%lx: %ld\n", address, get_variable_value(address));
-}
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <gelf.h>
-#include <libelf.h>
-
 long find_variable_address(const char *variable_name, const char *executable_path) {
     int fd;
     Elf *elf;
     Elf_Scn *scn = NULL;
     GElf_Shdr shdr;
     Elf_Data *data;
-    Elf32_Ehdr *ehdr;
-    Elf32_Shdr *shdr32;
 
     if (elf_version(EV_CURRENT) == EV_NONE) {
         fprintf(stderr, "libelf initialization failed: %s\n", elf_errmsg(-1));
@@ -132,11 +118,16 @@ long find_variable_address(const char *variable_name, const char *executable_pat
     return 0;
 }
 
-void print_variable_by_name(const char *variable_name) {
+void print_variable_at_address(pid_t child_pid, long address) {
+    // Print the value of variable at the specified address
+    printf("Value at address 0x%lx: %ld\n", address, get_variable_value(child_pid, address));
+}
+
+void print_variable_by_name(pid_t child_pid, const char *variable_name) {
     // Print the value of variable by name
-    long address = find_variable_address(variable_name);
+    long address = find_variable_address(variable_name, "program");
     if (address != 0) {
-        printf("Value of variable '%s' at address 0x%lx: %ld\n", variable_name, address, get_variable_value(address));
+        printf("Value of variable '%s' at address 0x%lx: %ld\n", variable_name, address, get_variable_value(child_pid, address));
     } else {
         printf("Variable '%s' not found.\n", variable_name);
     }
@@ -149,7 +140,7 @@ void set_variable_at_address(pid_t child_pid, long address, long value) {
 
 void set_variable_by_name(pid_t child_pid, const char *variable_name, long value) {
     // Set the value of variable by name
-    long address = find_variable_address(variable_name);
+    long address = find_variable_address(variable_name, "program");
     if (address != 0) {
         set_variable_at_address(child_pid, address, value);
         printf("Value of variable '%s' at address 0x%lx set to %ld\n", variable_name, address, value);
@@ -214,7 +205,7 @@ int main(int argc, char *argv[]) {
                     continue;
                 }
                 address = strtol(token, NULL, 16);
-                print_variable_at_address(address);
+                print_variable_at_address(child_pid, address);
             } else if (strcmp(token, "vnp") == 0) {
                 // Print variable by name
                 token = strtok(NULL, " \n");
@@ -222,7 +213,7 @@ int main(int argc, char *argv[]) {
                     printf("Missing variable name argument for print variable by name command.\n");
                     continue;
                 }
-                print_variable_by_name(token);
+                print_variable_by_name(child_pid, token);
             } else if (strcmp(token, "vas") == 0) {
                 // Set variable at address
                 token = strtok(NULL, " \n");
@@ -237,7 +228,7 @@ int main(int argc, char *argv[]) {
                     continue;
                 }
                 value = strtol(token, NULL, 10);
-                set_variable_at_address(address, value);
+                set_variable_at_address(child_pid, address, value);
             } else if (strcmp(token, "vns") == 0) {
                 // Set variable by name
                 token = strtok(NULL, " \n");
@@ -253,10 +244,16 @@ int main(int argc, char *argv[]) {
                     continue;
                 }
                 value = strtol(token, NULL, 10);
-                set_variable_by_name(variable_name, value);
+                set_variable_by_name(child_pid, variable_name, value);
             } else if (strcmp(token, "br") == 0) {
                 // Remove breakpoint
-                remove_breakpoint(child_pid);
+                token = strtok(NULL, " \n");
+                if (token == NULL) {
+                    printf("Missing address argument for remove breakpoint command.\n");
+                    continue;
+                }
+                address = strtol(token, NULL, 16);
+                remove_breakpoint(child_pid, address);
             } else if (strcmp(token, "help") == 0) {
                 // Print help message
                 print_help();
@@ -271,3 +268,4 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
+
