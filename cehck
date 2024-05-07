@@ -1,12 +1,12 @@
                                                                                                                                                               
 ┌──(usman㉿kali)-[~/ftask]
 └─$ gcc -o program program.c -g     
-.                                                                                                                                                              
+                                                                                                                                                              
 ┌──(usman㉿kali)-[~/ftask]
 └─$ ./program            
-Address of num1: 0x7ffc7e94625c
-Address of num2: 0x7ffc7e946258
-Address of sum: 0x7ffc7e946254
+Address of num1: 0x7ffeb522682c
+Address of num2: 0x7ffeb5226828
+Address of sum: 0x7ffeb5226824
 The sum of 10 and 20 is 30
                                                                                                                                                               
 ┌──(usman㉿kali)-[~/ftask]
@@ -29,25 +29,28 @@ vas [address] [value] - Set the value of the variable at the specified address
 vns [variable_name] [value] - Set the value of the variable with the specified name
 br - Remove breakpoint
 help - Display this help message
-> b main
+> b 0x7ffeb522682c
 > c
-Address of num1: 0x7fff595b350c
-Address of num2: 0x7fff595b3508
-Address of sum: 0x7fff595b3504
+Address of num1: 0x7ffe3c1eb60c
+Address of num2: 0x7ffe3c1eb608
+Address of sum: 0x7ffe3c1eb604
 The sum of 10 and 20 is 30
 > s
-> c
-> vap 0x7fff595b350c
-Value at address 0x7fff595b350c: -1
-> vnp num1
-Variable 'num1' not found.
-> vas 0x7fff595b350c 100
-> vns num1 10
-Variable 'num1' not found.
+> vap 0x7ffe3c1eb60c
+Value at address 0x7ffe3c1eb60c: -1
+> vap 0x7ffe3c1eb608
+Value at address 0x7ffe3c1eb608: -1
+> vap 0x7ffe3c1eb604
+Value at address 0x7ffe3c1eb604: -1
+> vnp sum
+Variable 'sum' not found.
+> vas 0x7ffe3c1eb604 100
 > br main
 > c
+> s
 > q
 Exiting debugger.
+                      
 
 
 
