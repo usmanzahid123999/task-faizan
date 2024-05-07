@@ -8,10 +8,8 @@
 #include <string.h>
 #include <elf.h>
 #include <libelf.h>
-#include <fcntl.h> // Added to resolve 'open' related issues
-#include <libelf.h>
+#include <fcntl.h>
 #include <gelf.h>
-
 
 #define MAX_COMMAND_LENGTH 100
 #define MAX_ADDRESS_LENGTH 20
@@ -130,7 +128,7 @@ void print_variable_at_address(pid_t child_pid, long address) {
 
 void print_variable_by_name(pid_t child_pid, const char *variable_name) {
     // Print the value of variable by name
-    long address = find_variable_address(variable_name, "./program.c");
+    long address = find_variable_address(variable_name, "./program");
     if (address != 0) {
         printf("Value of variable '%s' at address 0x%lx: %ld\n", variable_name, address, get_variable_value(child_pid, address));
     } else {
@@ -145,7 +143,7 @@ void set_variable_at_address(pid_t child_pid, long address, long value) {
 
 void set_variable_by_name(pid_t child_pid, const char *variable_name, long value) {
     // Set the value of variable by name
-    long address = find_variable_address(variable_name, "program");
+    long address = find_variable_address(variable_name, "./program");
     if (address != 0) {
         set_variable_at_address(child_pid, address, value);
         printf("Value of variable '%s' at address 0x%lx set to %ld\n", variable_name, address, value);
@@ -170,7 +168,7 @@ int main(int argc, char *argv[]) {
     if (child_pid == 0) {
         // Child process
         if (ptrace(PTRACE_TRACEME, 0, NULL, NULL) < 0) {
-            perror("ptrace TRACEME");
+                      perror("ptrace TRACEME");
             return 1;
         }
         if (execvp(argv[1], argv + 1) < 0) {
@@ -192,10 +190,11 @@ int main(int argc, char *argv[]) {
                 printf("Unknown command. Type 'help' for commands.\n");
                 continue;
             }
-          if (strcmp(token, "q") == 0) {
-    // Quit the debugger
-    printf("Exiting debugger.\n");
-    break; // Exit the while loop
+
+            if (strcmp(token, "q") == 0) {
+                // Quit the debugger
+                printf("Exiting debugger.\n");
+                break; // Exit the while loop
             } 
 
             if (strcmp(token, "b") == 0) {
@@ -284,3 +283,5 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
+
+
