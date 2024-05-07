@@ -1,16 +1,16 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -g -O2 -fPIE -Werror -Wl,-no-pie
-LDFLAGS = -lelf
+CFLAGS = -Wall -Wextra -g -O2 -fPIE -Werror -no-pie
+LDFLAGS = $(shell pkg-config --libs libelf)
 
 TARGET = spo_debug
 SRC = main.c
 
 all: $(TARGET)
 
-$(TARGET): main.o $(DEPS)
-    $(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
+$(TARGET): main.o
+    $(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-main.o: $(SRC) $(DEPS)
+main.o: $(SRC)
     $(CC) $(CFLAGS) -c -o $@ $<
 
 DEPS = $(SRC:.c=.d)
@@ -25,5 +25,6 @@ DEPS = $(SRC:.c=.d)
 
 clean:
     rm -f $(TARGET) main.o $(DEPS)
+
 
 
