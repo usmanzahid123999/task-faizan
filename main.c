@@ -32,14 +32,19 @@ void print_help() {
 }
 
 void set_breakpoint(pid_t child_pid, long address) {
-    // Set breakpoint at the specified address
-    ptrace(PTRACE_POKETEXT, child_pid, (void *)address, (void *)((ptrace(PTRACE_PEEKTEXT, child_pid, (void *)address, 0) & ~0xFF) | 0xCC));
+    // Read the original instruction
+    long original_instruction = ptrace(PTRACE_PEEKTEXT, child_pid, (void *)address, NULL);
+    // Set breakpoint by replacing the least significant byte with int3
+    long modified_instruction = (original_instruction & ~0xFF) | 0xCC;
+    // Write the modified instruction
+    ptrace(PTRACE_POKETEXT, child_pid, (void *)address, (void *)modified_instruction);
 }
 
-void remove_breakpoint(pid_t child_pid, long address) {
-    // Remove breakpoint at the specified address
-    ptrace(PTRACE_POKETEXT, child_pid, (void *)address, (void *)(ptrace(PTRACE_PEEKTEXT, child_pid, (void *)address, 0) & ~0xFF));
+void remove_breakpoint(pid_t child_pid, long address, long original_instruction) {
+    // Restore the original instruction
+    ptrace(PTRACE_POKETEXT, child_pid, (void *)address, (void *)original_instruction);
 }
+
 
 void single_step(pid_t child_pid) {
     // Perform single step
