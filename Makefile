@@ -5,13 +5,13 @@ LDFLAGS = -lelf
 TARGET = spo_debug
 SRC = main.c
 
-all: build
+all: spo_debug
 
-build: $(SRC)
-    $(CC) $(CFLAGS) $(LDFLAGS) -o $(TARGET) $(SRC)
+spo_debug: main.o
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(TARGET) main.o
 
-run:
-    ./$(TARGET) program_name
+main.o: $(SRC)
+	$(CC) $(CFLAGS) -c -o main.o $(SRC)
 
 clean:
-    rm -f $(TARGET)
+	rm -f $(TARGET) main.o
