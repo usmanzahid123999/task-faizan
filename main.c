@@ -8,9 +8,7 @@
 #include <string.h>
 #include <elf.h>
 #include <libelf.h>
-#include <fcntl.h>
-
-
+#include <fcntl.h> // Added to resolve 'open' related issues
 
 #define MAX_COMMAND_LENGTH 100
 #define MAX_ADDRESS_LENGTH 20
@@ -277,3 +275,4 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
+
