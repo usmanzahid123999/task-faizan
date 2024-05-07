@@ -1,11 +1,13 @@
-┌──(usman㉿kali)-[~/ftask]
-└─$ gcc -o program program.c -g  
                                                                                                                                                               
 ┌──(usman㉿kali)-[~/ftask]
-└─$ ./program          
-Address of num1: 0x7fff8a0fcb7c
-Address of num2: 0x7fff8a0fcb78
-Address of sum: 0x7fff8a0fcb74
+└─$ gcc -o program program.c -g     
+                                                                                                                                                              
+┌──(usman㉿kali)-[~/ftask]
+└─$ ./program                              
+
+Address of num1: 0x7ffd5d84565c
+Address of num2: 0x7ffd5d845658
+Address of sum: 0x7ffd5d845654
 The sum of 10 and 20 is 30
                                                                                                                                                               
 ┌──(usman㉿kali)-[~/ftask]
@@ -13,59 +15,24 @@ The sum of 10 and 20 is 30
 
                                                                                                                                                               
 ┌──(usman㉿kali)-[~/ftask]
-└─$ ./spo_debug program
+└─$ ./spo_debug ./program
 
-execvp: No such file or directory
 Debugger started. Type 'help' for commands.
-> help
-Debugger commands:
-b [address] - Set a breakpoint at the specified address
-q - Exit from debugger
-s - Perform a single step
-c - Continue execution until the next breakpoint
-vap [address] - Print the contents of the variable at the specified address
-vnp [variable_name] - Print the contents of the variable with the specified name
-vas [address] [value] - Set the value of the variable at the specified address
-vns [variable_name] [value] - Set the value of the variable with the specified name
-br - Remove breakpoint
-help - Display this help message
-> vap 0x7fff8a0fcb7c
-Value at address 0x7fff8a0fcb7c: -1
 > b main
 > c
-> c
-> c
-> c
-> c
-> c
-> c
-> c
-> c
-> c
-> c
-> c
-> c
-> c
-> c
-> c
-> c
-> c
-> c
-> c
-> c
-> c
-> c
-> c
-> c
-> c
-> c
-> c
-> c
-> c
-> c
-> c
-> vap 0x7fff8a0fcb7c
-Value at address 0x7fff8a0fcb7c: -1
-
-
+Address of num1: 0x7ffef9efcf5c
+Address of num2: 0x7ffef9efcf58
+Address of sum: 0x7ffef9efcf54
+The sum of 10 and 20 is 30
+> vap 0x7ffef9efcf5c
+Value at address 0x7ffef9efcf5c: -1
+> vas 0x7ffef9efcf5c 100
+> vns num1 10
+Variable 'num1' not found.
+> br 0x7ffef9efcf5c
+> q
+Exiting debugger.
+                                                                                                                                                              
+┌──(usman㉿kali)-[~/ftask]
+└─$ 
 
