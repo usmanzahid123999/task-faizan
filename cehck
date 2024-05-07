@@ -1,12 +1,12 @@
                                                                                                                                                               
 ┌──(usman㉿kali)-[~/ftask]
 └─$ gcc -o program program.c -g     
-                                                                                                                                                              
+.                                                                                                                                                              
 ┌──(usman㉿kali)-[~/ftask]
-└─$ ./program
-Address of num1: 0x7ffd3c3789fc
-Address of num2: 0x7ffd3c3789f8
-Address of sum: 0x7ffd3c3789f4
+└─$ ./program            
+Address of num1: 0x7ffc7e94625c
+Address of num2: 0x7ffc7e946258
+Address of sum: 0x7ffc7e946254
 The sum of 10 and 20 is 30
                                                                                                                                                               
 ┌──(usman㉿kali)-[~/ftask]
@@ -17,13 +17,6 @@ The sum of 10 and 20 is 30
 └─$ ./spo_debug ./program
 
 Debugger started. Type 'help' for commands.
-> b main
-> c
-Address of num1: 0x7fffa26ea8bc
-Address of num2: 0x7fffa26ea8b8
-Address of sum: 0x7fffa26ea8b4
-The sum of 10 and 20 is 30
-> s
 > help
 Debugger commands:
 b [address] - Set a breakpoint at the specified address
@@ -36,19 +29,25 @@ vas [address] [value] - Set the value of the variable at the specified address
 vns [variable_name] [value] - Set the value of the variable with the specified name
 br - Remove breakpoint
 help - Display this help message
-> vas 0x1235 100
-> vap 0x1235
-Value at address 0x1235: -1
-> vns num1
-Missing value argument for set variable by name command.
-> vns num1 100
-Variable 'num1' not found.
+> b main
+> c
+Address of num1: 0x7fff595b350c
+Address of num2: 0x7fff595b3508
+Address of sum: 0x7fff595b3504
+The sum of 10 and 20 is 30
+> s
+> c
+> vap 0x7fff595b350c
+Value at address 0x7fff595b350c: -1
 > vnp num1
+Variable 'num1' not found.
+> vas 0x7fff595b350c 100
+> vns num1 10
 Variable 'num1' not found.
 > br main
 > c
-> s
 > q
 Exiting debugger.
+
 
 
