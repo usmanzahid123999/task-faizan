@@ -1,13 +1,13 @@
                                                                                                                                                               
 ┌──(usman㉿kali)-[~/ftask]
-└─$ sudo gcc -o program program.c -g                               
+└─$ sudo gcc -o program program.c -g     
 [sudo] password for usman: 
                                                                                                                                                               
 ┌──(usman㉿kali)-[~/ftask]
 └─$ sudo ./program                  
-Address of num1: 0x7ffe9736a52c
-Address of num2: 0x7ffe9736a528
-Address of sum: 0x7ffe9736a524
+Address of num1: 0x7ffec4be950c
+Address of num2: 0x7ffec4be9508
+Address of sum: 0x7ffec4be9504
 The sum of 10 and 20 is 30
                                                                                                                                                               
 ┌──(usman㉿kali)-[~/ftask]
@@ -15,7 +15,7 @@ The sum of 10 and 20 is 30
 
                                                                                                                                                               
 ┌──(usman㉿kali)-[~/ftask]
-└─$ sudo ./spo_debug ./program
+└─$ sudo ./spo_debug ./program           
 
 Debugger started. Type 'help' for commands.
 > help
@@ -30,16 +30,18 @@ vas [address] [value] - Set the value of the variable at the specified address
 vns [variable_name] [value] - Set the value of the variable with the specified name
 br - Remove breakpoint
 help - Display this help message
-> b 0x7ffe9736a52c
-> vap 0x7ffe9736a52c
-Value at address 0x7ffe9736a52c: -1
-> vnp sum
-Variable 'sum' not found.
-> q
-Exiting debugger.
-                                                                                                                                                              
-┌──(usman㉿kali)-[~/ftask]
-└─$ 
+> b 0x7ffec4be950c
+> c
+Address of num1: 0x7ffd528e8cec
+Address of num2: 0x7ffd528e8ce8
+Address of sum: 0x7ffd528e8ce4
+The sum of 10 and 20 is 30
+> vap 0x7ffd528e8ce8
+ptrace PEEKDATA: No such process
+> vap 0x7ffd528e8cec
+ptrace PEEKDATA: No such process
+> vap ^C
+
 
 
 
