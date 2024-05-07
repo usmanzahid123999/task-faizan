@@ -32,19 +32,14 @@ void print_help() {
 }
 
 void set_breakpoint(pid_t child_pid, long address) {
-    // Read the original instruction
-    long original_instruction = ptrace(PTRACE_PEEKTEXT, child_pid, (void *)address, NULL);
-    // Set breakpoint by replacing the least significant byte with int3
-    long modified_instruction = (original_instruction & ~0xFF) | 0xCC;
-    // Write the modified instruction
-    ptrace(PTRACE_POKETEXT, child_pid, (void *)address, (void *)modified_instruction);
+    // Set breakpoint at the specified address
+    ptrace(PTRACE_POKETEXT, child_pid, (void *)address, (void *)((ptrace(PTRACE_PEEKTEXT, child_pid, (void *)address, 0) & ~0xFF) | 0xCC));
 }
 
-void remove_breakpoint(pid_t child_pid, long address, long original_instruction) {
-    // Restore the original instruction
-    ptrace(PTRACE_POKETEXT, child_pid, (void *)address, (void *)original_instruction);
+void remove_breakpoint(pid_t child_pid, long address) {
+    // Remove breakpoint at the specified address
+    ptrace(PTRACE_POKETEXT, child_pid, (void *)address, (void *)(ptrace(PTRACE_PEEKTEXT, child_pid, (void *)address, 0) & ~0xFF));
 }
-
 
 void single_step(pid_t child_pid) {
     // Perform single step
@@ -135,7 +130,7 @@ void print_variable_at_address(pid_t child_pid, long address) {
 
 void print_variable_by_name(pid_t child_pid, const char *variable_name) {
     // Print the value of variable by name
-    long address = find_variable_address(variable_name, "/home/usman/ftask/program.c");
+    long address = find_variable_address(variable_name, "./program.c");
     if (address != 0) {
         printf("Value of variable '%s' at address 0x%lx: %ld\n", variable_name, address, get_variable_value(child_pid, address));
     } else {
