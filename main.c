@@ -201,6 +201,11 @@ int main(int argc, char *argv[]) {
             } else if (strcmp(token, "s") == 0) {
                 // Perform single step
                 single_step(child_pid);
+                // Inside the main loop of your debugger
+            }else if (strcmp(token, "q") == 0) {
+    // Quit the debugger
+    printf("Exiting debugger.\n");
+    break; // Exit the while loop
             } else if (strcmp(token, "c") == 0) {
                 // Continue execution
                 continue_execution(child_pid);
