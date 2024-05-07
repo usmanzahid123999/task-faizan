@@ -3,13 +3,8 @@
 #include <unistd.h>
 #include <sys/ptrace.h>
 #include <sys/wait.h>
-#include <sys/user.h>
 #include <errno.h>
 #include <string.h>
-#include <elf.h>
-#include <libelf.h>
-#include <fcntl.h>
-#include <gelf.h>
 
 #define MAX_COMMAND_LENGTH 100
 #define MAX_ADDRESS_LENGTH 20
@@ -57,70 +52,33 @@ long get_variable_value(pid_t child_pid, long address) {
 }
 
 long find_variable_address(const char *variable_name, const char *executable_path) {
-    int fd;
-    Elf *elf;
-    Elf_Scn *scn = NULL;
-    GElf_Shdr shdr;
-    Elf_Data *data;
+    FILE *fp;
+    char command[100];
+    char result[1000];
 
-    if (elf_version(EV_CURRENT) == EV_NONE) {
-        fprintf(stderr, "libelf initialization failed: %s\n", elf_errmsg(-1));
+    // Construct the command to search for the variable address using libelf
+    snprintf(command, sizeof(command), "readelf -Ws %s | grep ' %s$' | awk '{print $1}'", executable_path, variable_name);
+
+    // Open the command for reading
+    fp = popen(command, "r");
+    if (fp == NULL) {
+        perror("popen");
         return 0;
     }
 
-    if ((fd = open(executable_path, O_RDONLY, 0)) < 0) {
-        perror("open");
+    // Read the output from the command
+    if (fgets(result, sizeof(result), fp) != NULL) {
+        // Convert hexadecimal string to long
+        long address = strtol(result, NULL, 16);
+        // Close the file pointer
+        pclose(fp);
+        return address;
+    } else {
+        // Close the file pointer
+        pclose(fp);
         return 0;
     }
-
-    if ((elf = elf_begin(fd, ELF_C_READ, NULL)) == NULL) {
-        fprintf(stderr, "elf_begin() failed: %s\n", elf_errmsg(-1));
-        close(fd);
-        return 0;
-    }
-
-    while ((scn = elf_nextscn(elf, scn)) != NULL) {
-        if (gelf_getshdr(scn, &shdr) != &shdr) {
-            fprintf(stderr, "getshdr() failed: %s\n", elf_errmsg(-1));
-            elf_end(elf);
-            close(fd);
-            return 0;
-        }
-
-        if (shdr.sh_type == SHT_SYMTAB || shdr.sh_type == SHT_DYNSYM) {
-            data = elf_getdata(scn, NULL);
-            if (data == NULL) {
-                fprintf(stderr, "elf_getdata() failed: %s\n", elf_errmsg(-1));
-                elf_end(elf);
-                close(fd);
-                return 0;
-            }
-
-            size_t symcount = shdr.sh_size / shdr.sh_entsize;
-            for (size_t i = 0; i < symcount; ++i) {
-                GElf_Sym sym;
-                if (gelf_getsym(data, i, &sym) != &sym) {
-                    fprintf(stderr, "gelf_getsym() failed: %s\n", elf_errmsg(-1));
-                    elf_end(elf);
-                    close(fd);
-                    return 0;
-                }
-
-                char *name = elf_strptr(elf, shdr.sh_link, sym.st_name);
-                if (name != NULL && strcmp(name, variable_name) == 0) {
-                    elf_end(elf);
-                    close(fd);
-                    return sym.st_value;
-                }
-            }
-        }
-    }
-
-    elf_end(elf);
-    close(fd);
-    return 0;
 }
-
 
 void print_variable_at_address(pid_t child_pid, long address) {
     // Get the value of variable at the specified address
@@ -176,7 +134,7 @@ int main(int argc, char *argv[]) {
     if (child_pid == 0) {
         // Child process
         if (ptrace(PTRACE_TRACEME, 0, NULL, NULL) < 0) {
-                      perror("ptrace TRACEME");
+            perror("ptrace TRACEME");
             return 1;
         }
         if (execvp(argv[1], argv + 1) < 0) {
@@ -291,5 +249,6 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
+
 
 
