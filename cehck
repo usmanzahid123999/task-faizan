@@ -1,21 +1,2 @@
-┌──(usman㉿kali)-[~/ftask]
-└─$ make      
-gcc -Wall -Wextra -g -O2 -fPIE -Werror -Wl,-no-pie -c -o main.o main.c
-gcc -Wall -Wextra -g -O2 -fPIE -Werror -Wl,-no-pie -lelf -o spo_debug main.o
-/usr/bin/ld: main.o: in function `find_variable_address':
-/home/usman/ftask/main.c:66:(.text+0x1af): undefined reference to `elf_version'
-/usr/bin/ld: /home/usman/ftask/main.c:76:(.text+0x1e8): undefined reference to `elf_begin'
-/usr/bin/ld: /home/usman/ftask/main.c:82:(.text+0x20c): undefined reference to `elf_nextscn'
-/usr/bin/ld: /home/usman/ftask/main.c:83:(.text+0x223): undefined reference to `gelf_getshdr'
-/usr/bin/ld: /home/usman/ftask/main.c:91:(.text+0x23f): undefined reference to `elf_getdata'
-/usr/bin/ld: /home/usman/ftask/main.c:109:(.text+0x284): undefined reference to `elf_strptr'
-/usr/bin/ld: /home/usman/ftask/main.c:102:(.text+0x2ba): undefined reference to `gelf_getsym'
-/usr/bin/ld: /home/usman/ftask/main.c:103:(.text+0x2c9): undefined reference to `elf_errmsg'
-/usr/bin/ld: /home/usman/ftask/main.c:104:(.text+0x2e9): undefined reference to `elf_end'
-/usr/bin/ld: /home/usman/ftask/main.c:67:(.text+0x316): undefined reference to `elf_errmsg'
-/usr/bin/ld: /home/usman/ftask/main.c:111:(.text+0x354): undefined reference to `elf_end'
-/usr/bin/ld: /home/usman/ftask/main.c:84:(.text+0x376): undefined reference to `elf_errmsg'
-/usr/bin/ld: /home/usman/ftask/main.c:77:(.text+0x38f): undefined reference to `elf_errmsg'
-/usr/bin/ld: /home/usman/ftask/main.c:93:(.text+0x3bf): undefined reference to `elf_errmsg'
-collect2: error: ld returned 1 exit status
-make: *** [Makefile:11: spo_debug] Error 1
+gcc -Wall -Wextra -g -O2 -fPIE -Werror -no-pie -o spo_debug main.o -lelf 
+
