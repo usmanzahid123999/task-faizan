@@ -1,32 +1,20 @@
-                                                                                
+                                                                                                                                                              
 ┌──(usman㉿kali)-[~/ftask]
 └─$ gcc -o program program.c     
-                                                                                
+                                                                                                                                                              
 ┌──(usman㉿kali)-[~/ftask]
 └─$ ./program            
-Address of num1: 0x7ffce8e3c41c
-Address of num2: 0x7ffce8e3c418
-Address of sum: 0x7ffce8e3c414
+Address of num1: 0x7ffc92c1d3dc
+Address of num2: 0x7ffc92c1d3d8
+Address of sum: 0x7ffc92c1d3d4
 The sum of 10 and 20 is 30
-                                                                                
+                                                                                                                                                              
 ┌──(usman㉿kali)-[~/ftask]
 └─$ gcc -o spo_debug main.c -lelf
 
-                                                                                
+                                                                                                                                                              
 ┌──(usman㉿kali)-[~/ftask]
-└─$ ./spo_debug program.c
-
-execvp: No such file or directory
-Debugger started. Type 'help' for commands.
-> q
-Exiting debugger.
-                                                                                
-┌──(usman㉿kali)-[~/ftask]
-└─$ ./spo_debug          
-Usage: ./spo_debug <program_name>
-                                                                                
-┌──(usman㉿kali)-[~/ftask]
-└─$ ./spo_debug program.c
+└─$ ./spo_debug program  
 
 execvp: No such file or directory
 Debugger started. Type 'help' for commands.
@@ -42,12 +30,17 @@ vas [address] [value] - Set the value of the variable at the specified address
 vns [variable_name] [value] - Set the value of the variable with the specified name
 br - Remove breakpoint
 help - Display this help message
-> vap 0x7ffce8e3c41c
-Value at address 0x7ffce8e3c41c: -1
-> vap 0x7ffce8e3c41c
-Value at address 0x7ffce8e3c41c: -1
+> vap 0x7ffc92c1d3dc
+Value at address 0x7ffc92c1d3dc: -1
 > vns num1 10
 Variable 'num1' not found.
 > q
 Exiting debugger.
-                          
+                                                                                                                                                              
+┌──(usman㉿kali)-[~/ftask]
+└─$ 
+                                                                                                                                                              
+┌──(usman㉿kali)-[~/ftask]
+└─$ 
+
+
