@@ -164,8 +164,14 @@ int main(int argc, char *argv[]) {
 
     if (child_pid == 0) {
         // Child process
-        ptrace(PTRACE_TRACEME, 0, NULL, NULL);
-        execvp(argv[1], argv + 1);
+        if (ptrace(PTRACE_TRACEME, 0, NULL, NULL) < 0) {
+            perror("ptrace TRACEME");
+            return 1;
+        }
+        if (execvp(argv[1], argv + 1) < 0) {
+            perror("execvp");
+            return 1;
+        }
     } else if (child_pid > 0) {
         // Parent process
         wait(NULL);
@@ -268,4 +274,3 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
-
