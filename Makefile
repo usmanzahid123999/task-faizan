@@ -5,20 +5,24 @@ LDFLAGS = -lelf
 TARGET = spo_debug
 SRC = main.c
 
-all: spo_debug
+all: $(TARGET)
 
-spo_debug: main.o
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $(TARGET) main.o
+$(TARGET): main.o
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 main.o: $(SRC)
-	$(CC) $(CFLAGS) -c -o main.o $(SRC)
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 DEPS = $(SRC:.c=.d)
 
 %.d: %.c
-	$(CC) -MM $(CFLAGS) $< -o $@
+	@set -e; rm -f $@; \
+	$(CC) -MM $(CFLAGS) $< > $@.$$$$; \
+	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	rm -f $@.$$$$
 
 -include $(DEPS)
 
 clean:
 	rm -f $(TARGET) main.o $(DEPS)
+
