@@ -8,6 +8,9 @@
 #include <string.h>
 #include <elf.h>
 #include <libelf.h>
+#include <fcntl.h>
+
+
 
 #define MAX_COMMAND_LENGTH 100
 #define MAX_ADDRESS_LENGTH 20
