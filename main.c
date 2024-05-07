@@ -125,7 +125,7 @@ void print_variable_at_address(pid_t child_pid, long address) {
 
 void print_variable_by_name(pid_t child_pid, const char *variable_name) {
     // Print the value of variable by name
-    long address = find_variable_address(variable_name, "program");
+    long address = find_variable_address(variable_name, "/path/to/your/executable");
     if (address != 0) {
         printf("Value of variable '%s' at address 0x%lx: %ld\n", variable_name, address, get_variable_value(child_pid, address));
     } else {
