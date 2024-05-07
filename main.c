@@ -121,6 +121,7 @@ long find_variable_address(const char *variable_name, const char *executable_pat
     return 0;
 }
 
+
 void print_variable_at_address(pid_t child_pid, long address) {
     // Print the value of variable at the specified address
     printf("Value at address 0x%lx: %ld\n", address, get_variable_value(child_pid, address));
