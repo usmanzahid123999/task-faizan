@@ -1,2 +1,45 @@
-gcc -Wall -Wextra -g -O2 -fPIE -Werror -no-pie -o spo_debug main.o -lelf 
+                                                                                                                                                              
+┌──(usman㉿kali)-[~/ftask]
+└─$ ls                                                                       
+Makefile  debuger  main.c  main.d  main.o  program  program.c  spo_debug
+                                                                                                                                                              
+┌──(usman㉿kali)-[~/ftask]
+└─$ make
+gcc -Wall -Wextra -g -O2 -fPIE -Werror -c -o main.o main.c
+gcc -Wall -Wextra -g -O2 -fPIE -Werror -o spo_debug main.o -lelf 
+                                                                                                                                                              
+┌──(usman㉿kali)-[~/ftask]
+└─$ ./spo_debug ./program
+
+Debugger started. Type 'help' for commands.
+> help
+Debugger commands:
+b [address] - Set a breakpoint at the specified address
+q - Exit from debugger
+s - Perform a single step
+c - Continue execution until the next breakpoint
+vap [address] - Print the contents of the variable at the specified address
+vnp [variable_name] - Print the contents of the variable with the specified name
+vas [address] [value] - Set the value of the variable at the specified address
+vns [variable_name] [value] - Set the value of the variable with the specified name
+br - Remove breakpoint
+help - Display this help message
+> b 0x7ffe631a19dc
+> c
+Address of num1: 0x7ffcf265301c
+Address of num2: 0x7ffcf2653018
+Address of sum: 0x7ffcf2653014
+The sum of 10 and 20 is 30
+> s
+> vap 0x7ffcf265301c
+ptrace PEEKDATA: No such process
+> br 0x7ffcf265301c
+> c   
+> q
+Exiting debugger.
+                                                                                                                                                              
+┌──(usman㉿kali)-[~/ftask]
+└─$ 
+
+
 
