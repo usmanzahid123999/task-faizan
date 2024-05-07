@@ -3,17 +3,14 @@ CFLAGS = -Wall -Wextra -g -O2 -fPIE -Werror -no-pie -m32
 LDFLAGS = -lelf
 
 TARGET = spo_debug
-SRC = main.c program.c  # Include both main.c and program.c here
+SRC = main.c
 
 all: $(TARGET)
 
-$(TARGET): main.o program.o
+$(TARGET): main.o
     $(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
-main.o: main.c
-    $(CC) $(CFLAGS) -c -o $@ $<
-
-program.o: program.c
+main.o: $(SRC)
     $(CC) $(CFLAGS) -c -o $@ $<
 
 DEPS = $(SRC:.c=.d)
@@ -27,6 +24,4 @@ DEPS = $(SRC:.c=.d)
 -include $(DEPS)
 
 clean:
-    rm -f $(TARGET) main.o program.o $(DEPS)
-
-
+    rm -f $(TARGET) main.o $(DEPS)
