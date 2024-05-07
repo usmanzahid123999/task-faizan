@@ -122,11 +122,17 @@ long find_variable_address(const char *variable_name, const char *executable_pat
 }
 
 
-
 void print_variable_at_address(pid_t child_pid, long address) {
+    // Get the value of variable at the specified address
+    long value = get_variable_value(child_pid, address);
+    if (value == -1 && errno != 0) {
+        perror("ptrace PEEKDATA");
+        return;
+    }
     // Print the value of variable at the specified address
-    printf("Value at address 0x%lx: %ld\n", address, get_variable_value(child_pid, address));
+    printf("Value at address 0x%lx: %ld\n", address, value);
 }
+
 
 void print_variable_by_name(pid_t child_pid, const char *variable_name) {
     // Print the value of variable by name
