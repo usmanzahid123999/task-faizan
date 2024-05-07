@@ -3,11 +3,10 @@
 └─$ gcc -o program program.c -g     
                                                                                                                                                               
 ┌──(usman㉿kali)-[~/ftask]
-└─$ ./program                              
-
-Address of num1: 0x7ffd5d84565c
-Address of num2: 0x7ffd5d845658
-Address of sum: 0x7ffd5d845654
+└─$ ./program
+Address of num1: 0x7ffd3c3789fc
+Address of num2: 0x7ffd3c3789f8
+Address of sum: 0x7ffd3c3789f4
 The sum of 10 and 20 is 30
                                                                                                                                                               
 ┌──(usman㉿kali)-[~/ftask]
@@ -20,19 +19,36 @@ The sum of 10 and 20 is 30
 Debugger started. Type 'help' for commands.
 > b main
 > c
-Address of num1: 0x7ffef9efcf5c
-Address of num2: 0x7ffef9efcf58
-Address of sum: 0x7ffef9efcf54
+Address of num1: 0x7fffa26ea8bc
+Address of num2: 0x7fffa26ea8b8
+Address of sum: 0x7fffa26ea8b4
 The sum of 10 and 20 is 30
-> vap 0x7ffef9efcf5c
-Value at address 0x7ffef9efcf5c: -1
-> vas 0x7ffef9efcf5c 100
-> vns num1 10
+> s
+> help
+Debugger commands:
+b [address] - Set a breakpoint at the specified address
+q - Exit from debugger
+s - Perform a single step
+c - Continue execution until the next breakpoint
+vap [address] - Print the contents of the variable at the specified address
+vnp [variable_name] - Print the contents of the variable with the specified name
+vas [address] [value] - Set the value of the variable at the specified address
+vns [variable_name] [value] - Set the value of the variable with the specified name
+br - Remove breakpoint
+help - Display this help message
+> vas 0x1235 100
+> vap 0x1235
+Value at address 0x1235: -1
+> vns num1
+Missing value argument for set variable by name command.
+> vns num1 100
 Variable 'num1' not found.
-> br 0x7ffef9efcf5c
+> vnp num1
+Variable 'num1' not found.
+> br main
+> c
+> s
 > q
 Exiting debugger.
-                                                                                                                                                              
-┌──(usman㉿kali)-[~/ftask]
-└─$ 
+
 
