@@ -9,6 +9,9 @@
 #include <elf.h>
 #include <libelf.h>
 #include <fcntl.h> // Added to resolve 'open' related issues
+#include <libelf.h>
+#include <gelf.h>
+
 
 #define MAX_COMMAND_LENGTH 100
 #define MAX_ADDRESS_LENGTH 20
@@ -17,6 +20,7 @@
 void print_help() {
     printf("Debugger commands:\n");
     printf("b [address] - Set a breakpoint at the specified address\n");
+    printf("q - Exit from debugger\n");
     printf("s - Perform a single step\n");
     printf("c - Continue execution until the next breakpoint\n");
     printf("vap [address] - Print the contents of the variable at the specified address\n");
@@ -126,7 +130,7 @@ void print_variable_at_address(pid_t child_pid, long address) {
 
 void print_variable_by_name(pid_t child_pid, const char *variable_name) {
     // Print the value of variable by name
-    long address = find_variable_address(variable_name, "/path/to/your/executable");
+    long address = find_variable_address(variable_name, "/home/usman/ftask/program.c");
     if (address != 0) {
         printf("Value of variable '%s' at address 0x%lx: %ld\n", variable_name, address, get_variable_value(child_pid, address));
     } else {
@@ -181,8 +185,6 @@ int main(int argc, char *argv[]) {
         while (1) {
             printf("> ");
             fgets(command, sizeof(command), stdin);
-
-
             
             // Tokenize command
             char *token = strtok(command, " \n");
@@ -190,13 +192,11 @@ int main(int argc, char *argv[]) {
                 printf("Unknown command. Type 'help' for commands.\n");
                 continue;
             }
-            // Inside the main loop of your debugger
-if (strcmp(token, "q") == 0) {
+          if (strcmp(token, "q") == 0) {
     // Quit the debugger
     printf("Exiting debugger.\n");
     break; // Exit the while loop
-}
-
+            } 
 
             if (strcmp(token, "b") == 0) {
                 // Set breakpoint
@@ -210,11 +210,6 @@ if (strcmp(token, "q") == 0) {
             } else if (strcmp(token, "s") == 0) {
                 // Perform single step
                 single_step(child_pid);
-                // Inside the main loop of your debugger
-            }else if (strcmp(token, "q") == 0) {
-    // Quit the debugger
-    printf("Exiting debugger.\n");
-    break; // Exit the while loop
             } else if (strcmp(token, "c") == 0) {
                 // Continue execution
                 continue_execution(child_pid);
@@ -289,5 +284,3 @@ if (strcmp(token, "q") == 0) {
 
     return 0;
 }
-
-
