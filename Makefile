@@ -25,4 +25,3 @@ DEPS = $(SRC:.c=.d)
 
 clean:
 	rm -f $(TARGET) main.o $(DEPS)
-
