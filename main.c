@@ -181,6 +181,8 @@ int main(int argc, char *argv[]) {
         while (1) {
             printf("> ");
             fgets(command, sizeof(command), stdin);
+
+
             
             // Tokenize command
             char *token = strtok(command, " \n");
@@ -188,6 +190,13 @@ int main(int argc, char *argv[]) {
                 printf("Unknown command. Type 'help' for commands.\n");
                 continue;
             }
+            // Inside the main loop of your debugger
+if (strcmp(token, "q") == 0) {
+    // Quit the debugger
+    printf("Exiting debugger.\n");
+    break; // Exit the while loop
+}
+
 
             if (strcmp(token, "b") == 0) {
                 // Set breakpoint
