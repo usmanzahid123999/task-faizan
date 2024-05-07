@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -g -O2 -fPIE -Werror -no-pie
+CFLAGS = -Wall -Wextra -g -O2 -fPIE -Werror -Wl,-no-pie
 LDFLAGS = -lelf
 
 TARGET = spo_debug
@@ -7,10 +7,10 @@ SRC = main.c
 
 all: $(TARGET)
 
-$(TARGET): main.o
+$(TARGET): main.o $(DEPS)
     $(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
-main.o: $(SRC)
+main.o: $(SRC) $(DEPS)
     $(CC) $(CFLAGS) -c -o $@ $<
 
 DEPS = $(SRC:.c=.d)
@@ -25,4 +25,5 @@ DEPS = $(SRC:.c=.d)
 
 clean:
     rm -f $(TARGET) main.o $(DEPS)
+
 
